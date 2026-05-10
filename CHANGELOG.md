@@ -12,3 +12,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - First version release for the c++ introduction branch, added initial files
+- C file example for compiling with clang
+- Cpp file example for compiling with clang++
