@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2026-05-13
+
+## Added
+- adv_data_structures.cpp. an introduction to advanced data structures from the Rebelway course.
+- linked_lists.cpp. An introduction to linked lists
+
 ## [0.0.2] - 2026-05-11
 
 ### Added
