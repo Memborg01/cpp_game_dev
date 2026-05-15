@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <iostream>
 
 struct Node {
@@ -8,6 +9,20 @@ struct Node {
 };
 
 /**
+ * Creates node that will stay in heap.
+ * This must be deleted from memory manually after use.
+ *
+ * @Param val Value to store in node
+ *
+ * @Return Pointer to newly created node
+ */
+Node *CreateNode(int val) {
+  Node *node = new Node();
+  node->val = val;
+  return node;
+}
+
+/**
  * Looks through Binary Tree Search nodes in Post Order
  * (See reference to Postorder Traversal at:
  * https://www.geeksforgeeks.org/dsa/tree-traversals-inorder-preorder-and-postorder/)
@@ -15,7 +30,7 @@ struct Node {
  *
  * @param *subtree Pointer of the subtree node
  */
-void PostOrderPrintLeaf(Node *subtree) {
+void PrintLeafNode(Node *subtree) {
   if (subtree == nullptr)
     return;
 
@@ -24,64 +39,71 @@ void PostOrderPrintLeaf(Node *subtree) {
     return;
   }
 
-  PostOrderPrintLeaf(subtree->left);
-  PostOrderPrintLeaf(subtree->right);
+  PrintLeafNode(subtree->left);
+  PrintLeafNode(subtree->right);
 }
 
 /**
  * Places node value at empty place in node tree
  *
  * @Param *subtree Reference to the subtree we are in.
- * @Param *currentNode Reference to the current node we want to place in Binary
- * Tree
+ * @Param *value Value we want to store in the node.
  * */
-void PlaceValue(Node *subtree, Node *currentNode) {
-  if (currentNode->val < subtree->val) {
+void InsertValue(Node *subtree, int value) {
+
+  if (value < subtree->val) {
     if (subtree->left == nullptr) {
-      subtree->left = currentNode;
+      subtree->left = CreateNode(value);
       return;
     }
 
-    PlaceValue(subtree->left, currentNode);
+    InsertValue(subtree->left, value);
     return;
   }
 
   if (subtree->right == nullptr) {
-    subtree->right = currentNode;
+    subtree->right = CreateNode(value);
     return;
   }
 
-  PlaceValue(subtree->right, currentNode);
+  InsertValue(subtree->right, value);
   return;
 }
 
-Node CreateBinarySearchTree(Node node_list[9]) {
-  Node root = node_list[0];
+Node *CreateBinarySearchTree(int *node_list, size_t size) {
+  Node *root = CreateNode(node_list[0]);
 
-  for (int i = 1; i < 9; i++) {
-    if (node_list[i].val == 0) {
-      return root;
-    }
-
-    PlaceValue(&root, &node_list[i]);
+  for (int i = 1; i < size; ++i) {
+    InsertValue(root, node_list[i]);
   }
+
   return root;
 }
 
-Node BTSNode(int val) {
-  Node node = Node();
-  node.val = val;
-  return node;
+/**
+ * Delete Node tree recursively.
+ */
+void DeleteTree(Node *subtree) {
+  if (subtree == nullptr) {
+    return;
+  }
+
+  DeleteTree(subtree->left);
+  DeleteTree(subtree->right);
+  delete subtree;
 }
 
 int main() {
-  Node num_list[9] = {BTSNode(8),  BTSNode(3),  BTSNode(12),
-                      BTSNode(6),  BTSNode(1),  BTSNode(4),
-                      BTSNode(10), BTSNode(14), BTSNode(9)};
+  const size_t size = 9;
 
-  Node newRoot = CreateBinarySearchTree(num_list);
+  int num_list[size] = {8, 3, 12, 6, 1, 4, 10, 14, 9};
 
-  PostOrderPrintLeaf(&newRoot);
+  Node *root = CreateBinarySearchTree(num_list, size);
+
+  PrintLeafNode(root);
+
+  DeleteTree(root);
+  root = nullptr;
 
   return 0;
 }
