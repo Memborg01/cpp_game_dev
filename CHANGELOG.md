@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.4] - 2026-05-15
+
+### Added
+- week1_bts.cpp assignment code. 
+- - This contains a function for creating a Binary Tree 
+    node network from an array of nodes.
+- - Contains a function for printing end nodes.
+
 ## [0.0.3] - 2026-05-13
 
 ## Added
