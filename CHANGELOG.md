@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.5] - 2026-05-16
+
+### Added
+- week2 folder for algorithms
+- - length_of_word.cpp
+- - two_sum.cpp
+- - oop_practice program
+- - main_app.cpp
+- - Lecture files on namespaces
+
 ## [0.0.4] - 2026-05-15
 
 ### Added
