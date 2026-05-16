@@ -70,11 +70,11 @@ void InsertValue(Node *subtree, int value) {
   return;
 }
 
-Node *CreateBinarySearchTree(int *node_list, size_t size) {
-  Node *root = CreateNode(node_list[0]);
+Node *CreateBinarySearchTree(int *num_list, size_t size) {
+  Node *root = CreateNode(num_list[0]);
 
   for (int i = 1; i < size; ++i) {
-    InsertValue(root, node_list[i]);
+    InsertValue(root, num_list[i]);
   }
 
   return root;
