@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - oop_practice program
 - - main_app.cpp
 - - Lecture files on namespaces
+- - store_app lecture folder
 
 ## [0.0.4] - 2026-05-15
 
