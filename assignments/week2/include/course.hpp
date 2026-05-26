@@ -11,8 +11,8 @@ class Course : EducationBase {
   private:
 
   public:
-    Course(std::unordered_map<std::string, User*> &STUDENT, std::unordered_map<std::string, User*> &TEACHER, size_t ID, std::string &NAME);
+    Course(size_t ID, std::string &NAME, std::unordered_map<std::string, User*> &STUDENT, std::unordered_map<std::string, User*> &TEACHERS);
     void GetInfo() const;
-    void AddStudent(Student &Student) const;
-    void AddTeacher(Teacher &Teacher) const;
+    void AddStudent(User &student) const;
+    void AddTeacher(User &teacher) const;
 };

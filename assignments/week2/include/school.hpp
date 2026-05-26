@@ -10,25 +10,24 @@
  *   */
 
 #include "course.hpp"
-#include "student.hpp"
+#include "education_base.hpp"
 #include "teacher.hpp"
 #include <cstddef>
 #include <string>
 #include <unordered_map>
-class School {
+class School : EducationBase {
 private:
-  size_t _id;
-  std::string _name;
-  std::unordered_map<size_t, Course> _courses;
-  std::unordered_map<size_t, Student> _students;
+  std::unordered_map<size_t, EducationBase*> _courses;
 
 public:
+  School(size_t ID, std::string &NAME, std::unordered_map<std::string, User*> &STUDENTS, 
+      std::unordered_map<std::string, User*> &TEACHERS, std::unordered_map<size_t, EducationBase*> COURSES);
 
-  void AddStudent(User &student) const;
-  void GetAllStudents() const;
+  void AddStudent(User &student) override;
+  void GetAllStudents() const override;
 
-  void AddTeacher(User &teacher) const;
-  void GetAllTeachers() const;
+  void AddTeacher(User &teacher) override;
+  void GetAllTeachers() const override;
 
   void AddCourse(Course &course) const;
   void GetAllCourses() const;
