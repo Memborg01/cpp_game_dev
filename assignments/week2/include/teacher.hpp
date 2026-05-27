@@ -6,14 +6,15 @@
 
 class Course;
 
-class Teacher : User {
+class Teacher : public User {
 private:
-  std::unordered_map<size_t, Course> _courses;
+  std::unordered_map<size_t, Course *> _courses;
 
 public:
-  Teacher(size_t ID, std::string &NAME, Course &COURSES);
+  Teacher(size_t ID, std::string &NAME,
+          std::unordered_map<size_t, Course *> &COURSES);
 
   void GetCourses() const;
-  void GetCourseStudents(size_t ID) const;
 
+  void AddCourse(Course *course);
 };

@@ -9,5 +9,5 @@ protected:
 public:
   User(size_t ID, std::string &NAME);
 
-  virtual void GetName() const = 0;
+  virtual std::string GetName() const;
 };
