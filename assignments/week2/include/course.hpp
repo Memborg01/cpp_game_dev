@@ -1,6 +1,6 @@
 #pragma once
+
 #include "education_base.hpp"
-#include "student.hpp"
 #include "user.hpp"
 #include <cstddef>
 #include <string>
@@ -10,7 +10,7 @@ class Course : public EducationBase {
 private:
 public:
   Course(size_t ID, std::string &NAME,
-         std::unordered_map<std::string, User *> &STUDENT,
+         std::unordered_map<std::string, User *> &STUDENTS,
          std::unordered_map<std::string, User *> &TEACHERS);
 
   std::string GetName() const;
@@ -19,4 +19,7 @@ public:
 
   void AddStudent(User *student) override;
   void AddTeacher(User *teacher) override;
+
+  void GetAllTeachers() const override;
+  void GetAllStudents() const override;
 };

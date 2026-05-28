@@ -1,7 +1,6 @@
 
 #include "course.hpp"
 #include "education_base.hpp"
-#include "student.hpp"
 #include "user.hpp"
 #include <cstddef>
 #include <iostream>
@@ -27,13 +26,25 @@ void Course::AddTeacher(User *teacher) {
 }
 
 void Course::GetInfo() const {
+  std::cout << "---" << GetName() << "---\n\n";
   std::cout << "Teachers:" << "\n";
   for (auto teacher : _teachers) {
-    std::cout << teacher.second->GetName() << "\n";
+    std::cout << " - " << teacher.second->GetName() << "\n";
   }
   std::cout << "\n";
   std::cout << "Students:" << "\n";
   for (auto student : _students) {
+    std::cout << "  - " << student.second->GetName() << "\n";
+  }
+  std::cout << "\n------------\n\n";
+}
+
+void Course::GetAllStudents() const {
+  std::cout << "Students in School:" << "\n";
+  for (auto student : _students) {
     std::cout << student.second->GetName() << "\n";
   }
+  std::cout << "\n";
 }
+
+void Course::GetAllTeachers() const { std::cout << "All Teachers" << "\n"; }

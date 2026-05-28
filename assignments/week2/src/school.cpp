@@ -22,13 +22,27 @@ void School::AddStudent(User *student) {
   _students[student->GetName()] = student;
 }
 
-void School::GetAllCourses() const { std::cout << "All Courses" << "\n"; }
+void School::GetAllCourses() const {
+  std::cout << "All Courses:" << "\n";
+  for (auto &course : _courses) {
+    course.second->GetInfo();
+  }
+  std::cout << "\n";
+}
 
 void School::GetAllStudents() const {
   std::cout << "Students in School:" << "\n";
   for (auto student : _students) {
     std::cout << student.second->GetName() << "\n";
   }
+  std::cout << "\n";
 }
 
-void School::GetAllTeachers() const { std::cout << "All Teachers" << "\n"; }
+void School::GetAllTeachers() const {
+  std::cout << "All Teachers:" << "\n";
+
+  for (auto teacher : _teachers) {
+    std::cout << teacher.second->GetName() << "\n";
+  }
+  std::cout << "\n";
+}

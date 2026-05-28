@@ -8,14 +8,10 @@
 class Student : public User {
 private:
   std::unordered_map<std::string, char> _grades;
-  std::unordered_map<size_t, std::string> _courses;
 
 public:
   Student(size_t ID, std::string &NAME,
-          std::unordered_map<std::string, char> &GRADES,
-          std::unordered_map<size_t, std::string> &COURSES);
+          std::unordered_map<std::string, char> &GRADES);
 
   void AddGrade(std::string &course_name, char &grade);
-  void AddCourse(Course *course);
-  void GetCourses() const;
 };
