@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.7] - 2026-05-28
+
+### Added
+- School app assignment week2
+- - Added files for the first revision. The initial plan was to implement a way 
+    for students and teachers to contain references to Courses and get the course list 
+    for a teacher or student. This became too complex and time consuming for this week.
+    Focus has instead been put on showing understanding of OOP concepts by implementing
+    these in the files.
+
 ## [0.0.6] - 2026-05-17
 
 ### Added
