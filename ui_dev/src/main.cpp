@@ -1,15 +1,17 @@
+#include <iostream>
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "imgui.h"
 
 #include <GLFW/glfw3.h>
 #include <gl/gl.h>
-#include <iostream>
 
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 
-void MySaveFunction() { std::cout << "Saving.....\n"; }
+void MySaveFunction() { 
+  std::cout << "Saving.....\n"; 
+}
 
 int main() {
 
