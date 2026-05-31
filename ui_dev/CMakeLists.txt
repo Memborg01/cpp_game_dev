@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 project(ui_module)
 set(CMAKE_CXX_STANDARD 20)
-set(glfw3_DIR "C:/Program Files (x86)/GLFW/lib/cmake/glfw3")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)

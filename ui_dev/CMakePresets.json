@@ -1,0 +1,26 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "ucrt-ninja",
+      "displayName": "MSYS2 UCRT64 Ninja",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "environment": {
+        "PATH": "C:/msys64/ucrt64/bin;$penv{PATH}"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/cc.exe",
+        "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/c++.exe",
+        "CMAKE_PREFIX_PATH": "C:/msys64/ucrt64/",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ucrt-ninja",
+      "configurePreset": "ucrt-ninja"
+    }
+  ]
+}
