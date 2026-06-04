@@ -1,21 +1,9 @@
-#include <iostream>
+#pragma once
+
+#include "component.hpp"
 #include <memory>
-#include <string>
 #include <typeindex>
 #include <unordered_map>
-#include <utility>
-
-struct Component {
-  virtual ~Component() = default;
-};
-
-struct EatingComponent : public Component {
-  void Eat() { std::cout << "Eating...\n"; }
-};
-
-struct FlyingComponent : public Component {
-  void Fly() { std::cout << "Flying...\n"; }
-};
 
 struct Entity {
 private:
@@ -40,22 +28,3 @@ public:
 
   template <typename T> void RemoveComponent() { components.erase(typeid(T)); }
 };
-
-struct Person : public Entity {
-  float _weight;
-  std::string _name;
-};
-
-int main() {
-
-  Person person1;
-  person1._weight = 110.1f;
-  person1._name = "Jonas";
-  person1.AddComponent<EatingComponent>();
-
-  if (auto *e = person1.GetComponent<EatingComponent>()) {
-    e->Eat();
-  }
-
-  return 0;
-}
