@@ -9,7 +9,7 @@
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 
-void MySaveFunction() { 
+inline void MySaveFunction() { 
   std::cout << "Saving.....\n"; 
 }
 
