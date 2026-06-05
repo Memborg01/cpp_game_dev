@@ -1,0 +1,11 @@
+CompileFlags:
+  CompilationDatabase: build
+  Add:
+    - --target=x86_64-w64-windows-gnu
+    - -std=c++20
+    - -Iinclude
+    - -Ithird_party/imgui
+    - -IC:/msys64/ucrt64/include
+    - -isystemC:/msys64/ucrt64/include/c++/15.2.0
+    - -isystemC:/msys64/ucrt64/include/c++/15.2.0/x86_64-w64-mingw32
+    - -isystemC:/msys64/ucrt64/include/c++/15.2.0/backward

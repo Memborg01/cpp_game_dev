@@ -1,0 +1,11 @@
+
+cmake_minimum_required(VERSION 3.11)
+project(test_modules)
+
+set(CXX_STANDARD_REQUIRED 20)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+file (GLOB SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
+
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+target_include_directories(${PROJECT_NAME} PRIVATE include)
