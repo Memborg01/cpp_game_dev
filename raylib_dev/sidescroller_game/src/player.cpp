@@ -1,8 +1,6 @@
 #include "player.hpp"
+#include "config.h"
 #include "raylib.h"
-
-const int PLAYER_SIZE_WIDTH = 32;
-const int PLAYER_SIZE_HEIGHT = 48;
 
 Player::Player(Texture2D &spriteSheet)
     : position({100, 300}), velocity({0, 0}), width(PLAYER_SIZE_WIDTH),
@@ -18,4 +16,150 @@ Player::Player(Texture2D &spriteSheet)
           {0, PLAYER_SIZE_HEIGHT * 3, PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT},
           6) {
   currentAnim = &idleAnim;
+}
+
+void Player::Update(float deltaTime, const std::vector<Rectangle> &platforms) {
+  velocity.x = 0;
+
+  if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
+    velocity.x = -PLAYER_SPEED;
+    facingRight = false;
+
+    if (isGrounded && state != ATTACKING) {
+      state = IDLE;
+    }
+  }
+
+  if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
+    velocity.x = PLAYER_SPEED;
+    facingRight = true;
+    if (isGrounded && state != ATTACKING) {
+      state = IDLE;
+    }
+  }
+
+  // jump mechanism
+  if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_W)) && isGrounded &&
+      state != ATTACKING) {
+
+    velocity.y = JUMP_FORCE;
+    isGrounded = false;
+    state = JUMPING;
+  }
+
+  // attack
+  if (IsKeyDown(KEY_J) && canAttack) {
+    state = ATTACKING;
+    canAttack = false;
+    attackTimer = 0.4f;
+  }
+
+  // gravity
+  velocity.y += GRAVITY * deltaTime;
+
+  position.x += velocity.x * deltaTime;
+  position.y += velocity.y * deltaTime;
+
+  // Platform collision
+  isGrounded = false;
+  Rectangle playerRect = GetBounds();
+
+  for (const auto &platform : platforms) {
+    if (CheckCollisionRecs(playerRect, platform)) {
+      // land on top
+      if (velocity.y > 0 &&
+          playerRect.y + playerRect.height - velocity.y * deltaTime <=
+              platform.y) {
+        position.y = platform.y - height;
+        velocity.y = 0;
+        isGrounded = true;
+        if (state == JUMPING) {
+          state = IDLE; // TODO change animation state based on design
+        }
+      }
+
+      // Hitting head
+      else if (velocity.y < 0 && playerRect.y - velocity.y * deltaTime >=
+                                     platform.y + platform.height) {
+        position.y = platform.y + platform.height;
+        velocity.y = 0;
+      }
+
+      // Side collision
+      else if (velocity.x > 0) {
+        position.x = platform.x - width;
+      } else if (velocity.x < 0) {
+        position.x = platform.x - platform.width;
+      }
+    }
+  }
+
+  // Screen boundaries
+  if (position.x < 0) {
+    position.x = 0;
+  }
+  if (position.x > 5000) {
+    position.x = 5000;
+  }
+
+  // Attack timer
+  if (!canAttack) {
+    attackTimer -= deltaTime;
+    if (attackTimer <= 0) {
+      canAttack = true;
+      if (isGrounded) {
+        state = IDLE;
+      } else {
+        state = JUMPING;
+      }
+    }
+  }
+
+  switch (state) {
+  case IDLE:
+    currentAnim = &idleAnim;
+    break;
+  case RUNNING:
+    currentAnim = &runAnim;
+    break;
+  case JUMPING:
+    currentAnim = &jumpAnim;
+    break;
+  case ATTACKING:
+    currentAnim = &attackAnim;
+    break;
+  }
+
+  currentAnim->Update(deltaTime);
+}
+
+void Player::Draw(Texture2D &spriteSheet) {
+  Rectangle source = currentAnim->GetCurrentFrame();
+
+  if (!facingRight) {
+    source.width = -source.width;
+  }
+
+  Rectangle dest = {position.x, position.y, width, height};
+  Vector2 origin = {0, 0};
+
+  DrawTexturePro(spriteSheet, source, dest, origin, 0.0f, WHITE);
+}
+
+Rectangle Player::GetBounds() const {
+  return {position.x, position.y, width, height};
+}
+
+Rectangle Player::GetAttackHitBox() const {
+  if (state != ATTACKING) {
+    return {0, 0, 0, 0};
+  }
+
+  float attackRange = 30.0f;
+  if (facingRight) {
+    return {position.x + width, position.y + 10, attackRange, height - 20};
+  } else {
+    return {position.x - attackRange, position.y + 10, attackRange,
+            height - 20.f};
+  }
 }

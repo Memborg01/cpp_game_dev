@@ -6,7 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #find_package(raylib REQUIRED)
 
 set(RAYLIB_DIR "C:/raylib/raylib/")
-set(RAYLIB_LIB_DIR "C:/raylib/raylib/build/raylib/Release")
+set(RAYLIB_LIB_DIR "C:/raylib/raylib/build/raylib/")
 
 include_directories(${RAYLIB_DIR}/src)
 link_directories(${RAYLIB_LIB_DIR})

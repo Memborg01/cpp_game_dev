@@ -1,7 +1,10 @@
 #pragma once
 
+#include "animation.hpp"
+#include "config.h"
 #include "raylib.h"
 #include <vector>
+
 struct Player {
   Vector2 position;
   Vector2 velocity;
@@ -12,7 +15,7 @@ struct Player {
   bool canAttack;
 
   PlayerState state;
-  Animation* currentAnim;
+  Animation *currentAnim;
   Animation idleAnim;
   Animation runAnim;
   Animation jumpAnim;
@@ -24,5 +27,4 @@ struct Player {
   void Draw(Texture2D &spriteSheet);
   Rectangle GetBounds() const;
   Rectangle GetAttackHitBox() const;
-
 };
