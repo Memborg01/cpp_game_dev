@@ -26,7 +26,7 @@ void Player::Update(float deltaTime, const std::vector<Rectangle> &platforms) {
     facingRight = false;
 
     if (isGrounded && state != ATTACKING) {
-      state = IDLE;
+      state = RUNNING;
     }
   }
 
@@ -34,7 +34,7 @@ void Player::Update(float deltaTime, const std::vector<Rectangle> &platforms) {
     velocity.x = PLAYER_SPEED;
     facingRight = true;
     if (isGrounded && state != ATTACKING) {
-      state = IDLE;
+      state = RUNNING;
     }
   }
 
@@ -113,6 +113,10 @@ void Player::Update(float deltaTime, const std::vector<Rectangle> &platforms) {
         state = JUMPING;
       }
     }
+  }
+
+  if (state == RUNNING && velocity.x == 0.0f) {
+    state = IDLE;
   }
 
   switch (state) {

@@ -2,6 +2,8 @@
 
 #include "collectible.hpp"
 #include "config.h"
+#include "door.hpp"
+#include "enemy.hpp"
 #include "player.hpp"
 #include "raylib.h"
 #include <vector>
@@ -16,8 +18,8 @@ struct Game {
   Player player;
   std::vector<Rectangle> platforms;
   std::vector<Collectible> coins;
-  // std::vector<Door> doors;
-  // std::vector<Enemy> enemies;
+  std::vector<Door> doors;
+  std::vector<Enemy> enemies;
 
   Camera2D camera;
 

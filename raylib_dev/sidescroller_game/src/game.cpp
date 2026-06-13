@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "config.h"
+#include "enemy.hpp"
 #include "player.hpp"
 #include "raylib.h"
 
@@ -30,6 +31,20 @@ void Game::CreateLevel() {
   platforms.push_back({300, 450, 100, 20});
   platforms.push_back({500, 350, 100, 20});
   platforms.push_back({700, 250, 100, 20});
+
+  // Collectibles
+  coins.emplace_back(Vector2{350, 400});
+
+  // Doors
+  doors.emplace_back(750.0f, 536.0f, 0);
+  doors.emplace_back(2800.0f, 286.0f, 1);
+
+  // Enemies
+  enemies.emplace_back(Enemy{1000, 502, 150});
+  enemies.emplace_back(Enemy{1600, 452, 100});
+
+  // Key pickup
+  coins.emplace_back(Vector2{2200, 350});
 }
 
 void Game::Update(float deltaTime) {
@@ -39,6 +54,32 @@ void Game::Update(float deltaTime) {
 
   player.Update(deltaTime, platforms);
   camera.target = {player.position.x, player.position.y - 100};
+
+  for (auto &coin : coins) {
+    coin.Update(deltaTime);
+    if (coin.CheckCollision(player.GetBounds())) {
+      coin.collected = true;
+      score += 10;
+      if (coin.position.x > 2100 && coin.position.x < 2300) {
+        keys++;
+      }
+    }
+  }
+
+  for (auto &door : doors) {
+    door.Update(player, keys);
+  }
+
+  for (auto &enemy : enemies) {
+    enemy.Update(deltaTime, player);
+  }
+
+  if (doors.size() > 0 && doors[1].isOpen &&
+      CheckCollisionRecs(player.GetBounds(),
+                         {doors[1].position.x, doors[1].position.y,
+                          doors[1].width, doors[1].height})) {
+    // level complete
+  }
 }
 
 void Game::Draw() {
@@ -47,9 +88,43 @@ void Game::Draw() {
   ClearBackground(SKYBLUE);
   BeginMode2D(camera);
 
+  for (const auto &plat : platforms) {
+    Rectangle source = {0, 64, 32, 32};
+    for (float x = plat.x; x < plat.x + plat.width; x += 32) {
+      for (float y = plat.y; y < plat.y + plat.height; y += 32) {
+        DrawTexturePro(environmentSheet, source, {x, y, 32, 32}, {0, 0}, 0,
+                       WHITE);
+      }
+    }
+  }
+
+  for (auto &door : doors) {
+    door.Draw(environmentSheet);
+  }
+
+  for (auto &coin : coins) {
+    coin.Draw(environmentSheet);
+  }
+
+  for (auto &enemy : enemies) {
+    enemy.Draw(characterSheet);
+  }
+
   player.Draw(characterSheet);
 
+  if (player.state == ATTACKING) {
+    Rectangle atk = player.GetAttackHitBox();
+    DrawRectangleRec(atk, ColorAlpha(RED, 0.3));
+  }
+
   EndMode2D();
+
+  DrawText(TextFormat("SCORE %d", score), 20, 20, 20, WHITE);
+  DrawText(TextFormat("KEYS %d", keys), 20, 50, 20, YELLOW);
+
+  DrawText(TextFormat("A/D Move | Space: Jump | J: Attack | E: Interact"), 20,
+           SCREEN_HEIGHT - 30, 16, WHITE);
+
   EndDrawing();
 }
 
