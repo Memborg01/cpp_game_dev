@@ -1,6 +1,7 @@
 ### Project Ignores ###
 REBELWAY_UPLOADS/*
 ui_dev/third_party/*
+raylib_dev/sidescroller_game/SourceAssets/*
 
 ### C++ Standard ignores ###
 

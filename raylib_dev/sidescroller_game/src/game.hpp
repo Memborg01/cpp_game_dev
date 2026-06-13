@@ -1,5 +1,6 @@
 #pragma once
 
+#include "collectible.hpp"
 #include "config.h"
 #include "player.hpp"
 #include "raylib.h"
@@ -14,7 +15,7 @@ struct Game {
 
   Player player;
   std::vector<Rectangle> platforms;
-  // std::vector<Collectible> coins;
+  std::vector<Collectible> coins;
   // std::vector<Door> doors;
   // std::vector<Enemy> enemies;
 
@@ -24,11 +25,11 @@ struct Game {
   int keys;
 
   Game();
-  // ~Game();
+  ~Game();
 
-  // void CreateLevel();
-  // void Update(float deltaTime);
-  // void Draw();
-  // void HandleInput();
-  // bool ShouldClose() const;
+  void CreateLevel();
+  void Update(float deltaTime);
+  void Draw();
+  void HandleInput();
+  bool ShouldClose() const;
 };

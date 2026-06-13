@@ -11,10 +11,10 @@ Player::Player(Texture2D &spriteSheet)
               6),
       jumpAnim(
           {0, PLAYER_SIZE_HEIGHT * 2, PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT},
-          6),
+          8),
       attackAnim(
           {0, PLAYER_SIZE_HEIGHT * 3, PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT},
-          6) {
+          3) {
   currentAnim = &idleAnim;
 }
 
