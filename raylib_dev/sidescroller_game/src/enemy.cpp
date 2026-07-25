@@ -26,10 +26,11 @@ void Enemy::Update(float deltaTime, Player &player) {
 
   if (CheckCollisionRecs(GetBounds(), player.GetBounds())) {
     if (player.position.x < position.x) {
-      player.position.x -= 50;
+      player.position.x -= 20;
     } else {
-      player.position.x += 50;
+      player.position.x += 20;
     }
+    player.ApplyDamage(1.f);
   }
 }
 
@@ -38,8 +39,8 @@ void Enemy::Draw(Texture2D &spriteSheet) {
     return;
   }
 
-  Rectangle source = {0, PLAYER_SIZE_HEIGHT * 3, PLAYER_SIZE_WIDTH,
-                      PLAYER_SIZE_HEIGHT};
+  Rectangle source = {0, PLAYER_SIZE * 3, PLAYER_SIZE,
+                      PLAYER_SIZE};
 
   Rectangle dest = {position.x, position.y, width, height};
   DrawTexturePro(spriteSheet, source, dest, {0, 0}, 0, WHITE);

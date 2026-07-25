@@ -4,6 +4,7 @@
 #include "config.h"
 #include "door.hpp"
 #include "enemy.hpp"
+#include "parralax.h"
 #include "player.hpp"
 #include "raylib.h"
 #include <vector>
@@ -25,6 +26,8 @@ struct Game {
 
   int score;
   int keys;
+
+  std::vector<ParallaxLayer> bgLayers;
 
   Game();
   ~Game();

@@ -1,10 +1,11 @@
 #include "collectible.hpp"
 #include "animation.hpp"
+#include "config.h"
 #include "raylib.h"
 
 Collectible::Collectible(Vector2 pos)
     : position(pos), radius(16.0f), collected(false),
-      animation({0, 200, 16, 16}, 8) {};
+      animation({TILE_SIZE, TILE_SIZE*3, TILE_SIZE, TILE_SIZE}, 1) {};
 
 void Collectible::Update(float deltaTime) {
   if (!collected) {

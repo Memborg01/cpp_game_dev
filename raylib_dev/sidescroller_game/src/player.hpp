@@ -8,11 +8,14 @@
 struct Player {
   Vector2 position;
   Vector2 velocity;
+  Vector2 checkpoint;
   float width, height;
   float attackTimer;
+  float health;
   bool facingRight;
   bool isGrounded;
   bool canAttack;
+  bool hasDied;
 
   PlayerState state;
   Animation *currentAnim;
@@ -25,6 +28,8 @@ struct Player {
 
   void Update(float deltaTime, const std::vector<Rectangle> &platforms);
   void Draw(Texture2D &spriteSheet);
+  void ApplyDamage(const float damage);
   Rectangle GetBounds() const;
   Rectangle GetAttackHitBox() const;
+  float GetHealth() { return health; };
 };

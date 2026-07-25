@@ -3,22 +3,24 @@
 #include "raylib.h"
 
 Player::Player(Texture2D &spriteSheet)
-    : position({100, 300}), velocity({0, 0}), width(PLAYER_SIZE_WIDTH),
-      height(PLAYER_SIZE_HEIGHT), facingRight(true), isGrounded(false),
-      canAttack(true), attackTimer(0), state(IDLE),
-      idleAnim({{0, 0, PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT}, 4}),
-      runAnim({0, PLAYER_SIZE_HEIGHT, PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT},
-              6),
-      jumpAnim(
-          {0, PLAYER_SIZE_HEIGHT * 2, PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT},
-          8),
-      attackAnim(
-          {0, PLAYER_SIZE_HEIGHT * 3, PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT},
-          3) {
+    : position({100, 350}), velocity({0, 0}), checkpoint({100, 350}), width(PLAYER_SIZE),
+      height(PLAYER_SIZE), facingRight(true), isGrounded(false),
+      canAttack(true), hasDied(false), attackTimer(0), health(3.0f), state(IDLE),
+      idleAnim({{0, 0, PLAYER_SIZE, PLAYER_SIZE}, 4}),
+      runAnim({0, PLAYER_SIZE, PLAYER_SIZE, PLAYER_SIZE}, 6),
+      jumpAnim({0, PLAYER_SIZE * 2, PLAYER_SIZE, PLAYER_SIZE}, 8),
+      attackAnim({0, PLAYER_SIZE * 3, PLAYER_SIZE, PLAYER_SIZE}, 3) {
   currentAnim = &idleAnim;
+  health = 3.0f;
 }
 
 void Player::Update(float deltaTime, const std::vector<Rectangle> &platforms) {
+  if (hasDied) {
+    position = checkpoint;
+    health = 3.0f;
+    hasDied = false;
+  }
+
   velocity.x = 0;
 
   if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
@@ -55,9 +57,26 @@ void Player::Update(float deltaTime, const std::vector<Rectangle> &platforms) {
   }
 
   // gravity
-  velocity.y += GRAVITY * deltaTime;
+  if (!isGrounded) {
+    velocity.y += GRAVITY * deltaTime;
+  }
+
+  Vector2 prevPos = position;
 
   position.x += velocity.x * deltaTime;
+
+  Rectangle playerRectX = {position.x, prevPos.y, width, height};
+  for (const auto &plat : platforms) {
+    if (CheckCollisionRecs(playerRectX, plat)) {
+      if (velocity.x > 0) {
+        position.x = plat.x - width;
+      } else if (velocity.x < 0) {
+        position.x = plat.x + plat.width;
+      }
+      velocity.x = 0;
+    }
+  }
+
   position.y += velocity.y * deltaTime;
 
   // Platform collision
@@ -67,29 +86,17 @@ void Player::Update(float deltaTime, const std::vector<Rectangle> &platforms) {
   for (const auto &platform : platforms) {
     if (CheckCollisionRecs(playerRect, platform)) {
       // land on top
-      if (velocity.y > 0 &&
-          playerRect.y + playerRect.height - velocity.y * deltaTime <=
-              platform.y) {
+      if (velocity.y > 0 && prevPos.y + height <= platform.y + 5) {
         position.y = platform.y - height;
         velocity.y = 0;
         isGrounded = true;
-        if (state == JUMPING) {
-          state = IDLE; // TODO change animation state based on design
-        }
       }
 
       // Hitting head
-      else if (velocity.y < 0 && playerRect.y - velocity.y * deltaTime >=
-                                     platform.y + platform.height) {
+      else if (velocity.y < 0 &&
+               prevPos.y >= platform.y + platform.height - 5) {
         position.y = platform.y + platform.height;
         velocity.y = 0;
-      }
-
-      // Side collision
-      else if (velocity.x > 0) {
-        position.x = platform.x - width;
-      } else if (velocity.x < 0) {
-        position.x = platform.x - platform.width;
       }
     }
   }
@@ -150,6 +157,13 @@ void Player::Draw(Texture2D &spriteSheet) {
   DrawTexturePro(spriteSheet, source, dest, origin, 0.0f, WHITE);
 }
 
+void Player::ApplyDamage(const float damage) {
+  health -= damage;
+  if (health <= 0) {
+    hasDied = true;
+  }
+}
+
 Rectangle Player::GetBounds() const {
   return {position.x, position.y, width, height};
 }
@@ -161,9 +175,8 @@ Rectangle Player::GetAttackHitBox() const {
 
   float attackRange = 30.0f;
   if (facingRight) {
-    return {position.x + width, position.y + 10, attackRange, height - 20};
+    return {position.x + width, position.y - height * 0.5f, attackRange, height};
   } else {
-    return {position.x - attackRange, position.y + 10, attackRange,
-            height - 20.f};
+    return {position.x - width, position.y - height * 0.5f, attackRange, height};
   }
 }

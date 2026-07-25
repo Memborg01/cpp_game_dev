@@ -3,13 +3,22 @@
 #include "enemy.hpp"
 #include "player.hpp"
 #include "raylib.h"
+#include <cmath>
 
 Game::Game() : player(characterSheet), score(0), keys(0), state(PLAYING) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Raylib Game Demo");
   SetTargetFPS(60);
 
-  characterSheet = LoadTexture("assets/character.png");
-  environmentSheet = LoadTexture("assets/environment.png");
+  characterSheet = LoadTexture("assets/dumpling.png");
+  environmentSheet = LoadTexture("assets/forest_tileset.png");
+
+  bgLayers = {
+    {LoadTexture("assets/bg/4/5.png"), 0.1f, 0},
+    {LoadTexture("assets/bg/4/4.png"), 0.3f, 0},
+    {LoadTexture("assets/bg/4/3.png"), 0.6f, 0},
+    {LoadTexture("assets/bg/4/2.png"), 0.7f, 0},
+    {LoadTexture("assets/bg/4/1.png"), 0.8f, 0},
+  };
 
   camera.target = {0, 0};
   camera.offset = {SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f};
@@ -28,12 +37,12 @@ void Game::CreateLevel() {
   platforms.push_back({2100, 400, 200, 120});
 
   // Floating platforms
-  platforms.push_back({300, 450, 100, 20});
+  platforms.push_back({300, 500, 100, 20});
   platforms.push_back({500, 350, 100, 20});
   platforms.push_back({700, 250, 100, 20});
 
   // Collectibles
-  coins.emplace_back(Vector2{350, 400});
+  coins.emplace_back(Vector2{350, 450});
 
   // Doors
   doors.emplace_back(750.0f, 536.0f, 0);
@@ -53,6 +62,7 @@ void Game::Update(float deltaTime) {
   }
 
   player.Update(deltaTime, platforms);
+
   camera.target = {player.position.x, player.position.y - 100};
 
   for (auto &coin : coins) {
@@ -80,16 +90,27 @@ void Game::Update(float deltaTime) {
                           doors[1].width, doors[1].height})) {
     // level complete
   }
+
+  for (auto &layer : bgLayers) {
+    layer.offsetX = -player.position.x * layer.speed;
+  }
 }
 
 void Game::Draw() {
   BeginDrawing();
 
   ClearBackground(SKYBLUE);
+
+  for (auto &layer : bgLayers) {
+    float x = fmod(layer.offsetX, layer.texture.width);
+    DrawTexture(layer.texture, x, 0, WHITE);
+    DrawTexture(layer.texture, x + layer.texture.width, 0, WHITE);
+  }
+
   BeginMode2D(camera);
 
   for (const auto &plat : platforms) {
-    Rectangle source = {0, 64, 32, 32};
+    Rectangle source = {GetTile(5), GetTile(3), TILE_SIZE, TILE_SIZE};
     for (float x = plat.x; x < plat.x + plat.width; x += 32) {
       for (float y = plat.y; y < plat.y + plat.height; y += 32) {
         DrawTexturePro(environmentSheet, source, {x, y, 32, 32}, {0, 0}, 0,
@@ -119,10 +140,12 @@ void Game::Draw() {
 
   EndMode2D();
 
+  float phealth = player.GetHealth();
   DrawText(TextFormat("SCORE %d", score), 20, 20, 20, WHITE);
   DrawText(TextFormat("KEYS %d", keys), 20, 50, 20, YELLOW);
+  DrawText(TextFormat("HEALTH %f", phealth), 20, 70, 20, RED);
 
-  DrawText(TextFormat("A/D Move | Space: Jump | J: Attack | E: Interact"), 20,
+  DrawText(TextFormat("A/D Move | Space: Jump | J: Attack | E: Interact | N: Respawn"), 20,
            SCREEN_HEIGHT - 30, 16, WHITE);
 
   EndDrawing();
@@ -133,6 +156,10 @@ void Game::HandleInput() {
     state = PLAYING;
   } else if (state == PLAYING && IsKeyPressed(KEY_P)) {
     state = PAUSED;
+  }
+
+  if (IsKeyPressed(KEY_N)) {
+    player.hasDied = true;
   }
 }
 
